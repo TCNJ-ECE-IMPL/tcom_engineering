@@ -1,0 +1,11 @@
+*.lst
+*.o
+*.s
+*.bak
+*.log
+*.ld
+*codegentemp*
+*.zip
+*.elf
+*.hex
+*.map

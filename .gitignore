@@ -9,3 +9,4 @@
 *.elf
 *.hex
 *.map
+*.DS_Store

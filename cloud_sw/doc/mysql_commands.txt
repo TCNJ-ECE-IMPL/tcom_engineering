@@ -1,0 +1,12 @@
+To access as a root user w/ password
+mysql -u root -p
+
+To access as the user w/ password
+mysql -p
+
+To make a new user
+CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'user_password';
+
+To give a user privileges
+GRANT ALL PRIVILEGES ON *.* TO ‘user’@‘localhost’ WITH GRANT OPTION;
+GRANT PROXY ON ‘’@‘’ TO ‘user’@‘localhost’ WITH GRANT OPTION;

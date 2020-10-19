@@ -1,8 +1,6 @@
 from datetime import timedelta
 import csv
-
-MSG = ["msg1", "msg2", "msg3"] #could do an enum instead also is a constant
-EVENTS = ["msg_read", "co_taken", "cravings_reported"] #could do an enum instead also is a constant
+import math
 
 class TCOM_Msg(object):
     def __init__(self, id, msg) -> None:
@@ -23,15 +21,17 @@ class TCOM_Msg(object):
         return self.msgValue
 
 class TCOM_Event(object):
-    def __init__(self, id, event) -> None:
+    def __init__(self, id, event, tau) -> None:
         self.eventId = id
         self.eventType = event
+        self.tau = tau
         self.lastOccured = datetime.now() #chane to date w/ time down to seconds
-        self.eventValue = 0
+        self.eventValue = 1
         self.logCount = 0
+        self.hasOccuredOnce = false
 
-    def UpdateDate(self) -> None:
-        self.lastSent = datetime.now()
+    def UpdateDate(self, date) -> None:
+        self.lastSent = date #In format of datetime
 
     def UpdateValue(self, x) -> None:
         self.eventValue = x
@@ -41,6 +41,9 @@ class TCOM_Event(object):
 
     def ReadDate(self) -> datetime:
         return self.lastSent
+
+    def ReadValue(self) -> Float:
+        return self.Tau
 
     def ReadValue(self) -> Int:
         return self.eventValue
@@ -69,8 +72,8 @@ class TCOM_User_Events(object):
                         msg_counter = msg_counter + 1
                     read_msg = false
                 else:
-                    self.eventList.push(TCOM_Event.new(event_counter, row[0])) #Stores all events
-                    self.eventWeights.push(row[1:]) #Stores all the event and message weights
+                    self.eventList.push(TCOM_Event.new(event_counter, row[0],row[1])) #Stores all events
+                    self.eventWeights.push(row[2:]) #Stores all the event and message weights
                     event_counter = event_counter + 1
 
     def SetHours(self, start_hour, end_hour) -> None:
@@ -91,7 +94,9 @@ class TCOM_User_Events(object):
         for x in self.msgList:
             temp_priority = (current_time-x.ReadDate()).days
             for y in self.eventList:
-                temp_priority = temp_priority + y.ReadValue() * self.eventWeights[x.ReadID()][y.ReadID()] #TODO: Advance prioity algorithm
+                exp_value = exp(-(current_time.days-y.ReadDate().days)/y.ReadTau()) #e^(-delta_t/tau)
+                weight = self.eventWeights[x.ReadID()][y.ReadID()]
+                temp_priority = temp_priority + (y.ReadValue() * exp_value  * weight) #TODO: Should we have negative priorities or only poisitive ones?
             if temp_priority > current_priority:
                 send_msg = x.ReadMsg();
 

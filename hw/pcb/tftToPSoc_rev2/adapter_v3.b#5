@@ -177,6 +177,7 @@ Rev 2.0 || T-COM Project || j.sinoway</text>
 2
 1</text>
 <text x="38.608" y="26.67" size="0.6096" layer="25">DB7</text>
+<dimension x1="29.21" y1="0" x2="29.21" y2="22.86" x3="29.21" y3="11.43" textsize="1.778" layer="47"/>
 </plain>
 <libraries>
 <library name="capacitor-wima" urn="urn:adsk.eagle:library:116">

@@ -103,7 +103,7 @@
 <dimension x1="0" y1="68.25" x2="0" y2="-10.16" x3="-3.175" y3="29.045" textsize="1.778" layer="20"/>
 <dimension x1="0" y1="-10.4775" x2="76.2" y2="-10.795" x3="38.1" y3="-14.605" textsize="1.778" layer="20" dtype="horizontal"/>
 <text x="23.9395" y="-9.3091" size="1.27" layer="25">3.5TFTdisplay to PSoC6 Adapter
-Rev 2.0 || T-COM Project || j.sinoway</text>
+Rev 3.0 || T-COM Project || j.sinoway</text>
 <text x="62.865" y="59.055" size="1.016" layer="25" distance="150" rot="R90">39
 37
 35

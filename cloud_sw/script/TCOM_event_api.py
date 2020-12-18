@@ -25,7 +25,7 @@ class TCOM_Event(object):
         self.eventId = id
         self.eventType = event
         self.tau = tau
-        self.lastOccured = datetime.now() #chane to date w/ time down to seconds
+        self.lastOccured = datetime.now() #change to date w/ time down to seconds
         self.eventValue = 1
         self.logCount = 0
         self.hasOccuredOnce = false
@@ -42,7 +42,7 @@ class TCOM_Event(object):
     def ReadDate(self) -> datetime:
         return self.lastSent
 
-    def ReadValue(self) -> Float:
+    def ReadTau(self) -> Float:
         return self.Tau
 
     def ReadValue(self) -> Int:
@@ -87,14 +87,20 @@ class TCOM_User_Events(object):
             self.hours = ~(base & mask)
 
     def ProcessEvents(self) -> string:
-        current_priority = 0
+        current_priority = 0 # score = sum of products(rho(Event) * exp(-(t-tevent)/Tau))
         send_msg = "NULL"
         current_time = datetime.now()
 
         for x in self.msgList:
-            temp_priority = (current_time-x.ReadDate()).days
+            #temp_priority = (current_time-x.ReadDate()).days #starts off with last time message was sent
+            temp_priority = 0; #starts off with a clean slate
             for y in self.eventList:
-                exp_value = exp(-(current_time.days-y.ReadDate().days)/y.ReadTau()) #e^(-delta_t/tau)
+                tau = y.ReadTau();
+                tau_magnitude = abs(tau);
+                if tau > 0: #Growth
+                    exp_value = 1 - exp(-(current_time.days-y.ReadDate().days)/tau_magnitude) #1 - e^(-delta_t/tau)
+                else: #Decay
+                    exp_value = exp(-(current_time.days-y.ReadDate().days)/tau_magnitude) #e^(-delta_t/tau)
                 weight = self.eventWeights[x.ReadID()][y.ReadID()]
                 temp_priority = temp_priority + (y.ReadValue() * exp_value  * weight) #TODO: Should we have negative priorities or only poisitive ones?
             if temp_priority > current_priority:
